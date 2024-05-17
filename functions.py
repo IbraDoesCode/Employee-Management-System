@@ -16,25 +16,30 @@ def retrieve_data():
 
 # Create
 def add_employee():
-    headers = ['Employee #', 'Last Name', 'First Name', 'Birthday', 'Address', 'Phone Number',
-               'SSS #', 'Philhealth #', 'TIN #', 'Pag-ibig #', 'Status', 'Position',
-               'Immediate Supervisor', 'Basic Salary', 'Rice Subsidy', 'Phone Allowance',
-               'Clothing Allowance', 'Gross Semi-monthly Rate', 'Hourly Rate']
+    try:
+        with open('Employee Data.csv', 'r') as employeeData:
+            reader = csv.DictReader(employeeData)
+            headers = reader.fieldnames
 
-    employee_data = {}
-    for header in headers:
-        if header == "Birthday":
-            data = input(f"{header}(DD/MM/YYYY): ")
-        else:
-            data = input(f"{header}: ")
-        employee_data[header] = data
+        employee_data = {}
+        for header in headers:
+            if header == "Gross Semi-monthly Rate" or header == "Hourly Rate":
+                continue
+            elif header == "Birthday":
+                data = input(f"{header}(DD/MM/YYYY): ")
+            else:
+                data = input(f"{header}: ")
+            employee_data[header] = data
 
-    with open('Employee Data.csv', 'a') as file:
-        writer = csv.DictWriter(file, fieldnames=headers)
+        with open('Employee Data.csv', 'a') as file:
+            writer = csv.DictWriter(file, fieldnames=headers)
 
-        writer.writerow(employee_data)
-        print("Employee added successfully")
-
+            writer.writerow(employee_data)
+            print("Employee added successfully")
+    except FileNotFoundError:
+        print("File not found")
+    except Exception as e:
+        print(e)
 
 # Read
 def view_all_employees():
